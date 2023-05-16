@@ -47,7 +47,9 @@ async function run() {
       res.send(result)
     })
 
+
     // bookings 
+
     app.get('/bookings',async(req,res)=>{
       // single user er services booking niye aste hobe 
       let query={};
@@ -63,6 +65,29 @@ async function run() {
     app.post('/bookings',async(req,res)=>{
       const serviceBooking=req.body;
       const result = await bookingServiceCollection.insertOne(serviceBooking);
+      res.send(result)
+    })
+
+    app.patch('/bookings/:id',async(req,res)=>{
+      const id=req.params.id
+      const updateBooking=req.body;
+      // const options = { upsert: true };
+      const filter = { _id: new ObjectId(id) };
+
+      const updateDoc = {
+        $set: {
+          status:updateBooking.status,
+        },
+      };
+
+      const result = await bookingServiceCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+
+    app.delete('/bookings/:id',async(req,res)=>{
+      const id=req.params.id
+      const query = {_id: new ObjectId(id) };
+      const result = await bookingServiceCollection.deleteOne(query);
       res.send(result)
     })
 
